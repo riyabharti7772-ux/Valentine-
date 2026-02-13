@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will you be my Valentine? ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #fff0f5 0%, #ffe4ec 100%);
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+            padding: 16px;
+        }
+
+        /* floating heart balloons */
+        .floating-heart {
+            position: absolute;
+            pointer-events: none;       /* so clicks pass through to buttons */
+            user-select: none;
+            font-size: 2.8rem;
+            opacity: 0.75;
+            filter: drop-shadow(0 8px 12px rgba(255, 80, 120, 0.3));
+            z-index: 5;
+            animation: floatAround 18s infinite alternate ease-in-out;
+        }
+
+        /* different sizes & start positions */
+        .heart1 { top: 8%; left: 5%; animation-duration: 22s; font-size: 3.2rem; }
+        .heart2 { top: 70%; left: 85%; animation-duration: 19s; font-size: 2.4rem; opacity: 0.6; }
+        .heart3 { top: 40%; left: 15%; animation-duration: 26s; font-size: 3.8rem; opacity: 0.5; }
+        .heart4 { top: 85%; left: 30%; animation-duration: 24s; font-size: 2.2rem; }
+        .heart5 { top: 15%; left: 75%; animation-duration: 20s; font-size: 3.0rem; }
+        .heart6 { top: 55%; left: 55%; animation-duration: 28s; font-size: 2.7rem; opacity: 0.7; }
+
+        @keyframes floatAround {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(40px, -30px) rotate(8deg); }
+            50% { transform: translate(-20px, 40px) rotate(-6deg); }
+            75% { transform: translate(30px, -20px) rotate(10deg); }
+            100% { transform: translate(-30px, 30px) rotate(-5deg); }
+        }
+
+        /* main card */
+        .valentine-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 64px 24px 64px 24px;
+            box-shadow: 0 25px 45px rgba(230, 80, 120, 0.25),
+                        0 0 0 2px #fff9 inset,
+                        0 0 0 5px #ffb6c1 inset;
+            max-width: 650px;
+            width: 100%;
+            padding: 2.8rem 2rem;
+            text-align: center;
+            z-index: 20;
+            transition: 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: #d43f6b;
+            text-shadow: 2px 2px 0 #ffe2eb, 4px 4px 0 rgba(255, 140, 180, 0.3);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+            word-break: break-word;
+        }
+
+        .question {
+            font-size: 2.2rem;
+            margin: 1rem 0 2rem 0;
+            background: #ffffffc0;
+            padding: 0.8rem 1.2rem;
+            border-radius: 60px;
+            display: inline-block;
+            color: #b33b5c;
+            font-weight: 500;
+            box-shadow: 0 4px 12px #ffb6c180;
+            backdrop-filter: blur(4px);
+        }
+
+        /* button container */
+        .button-pair {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            margin: 2rem 0 1rem;
+            position: relative;
+            min-height: 100px;
+        }
+
+        /* base button style */
+        .btn {
+            font-size: 2rem;
+            font-weight: 600;
+            padding: 1rem 2.8rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.2s;
+            letter-spacing: 1.5px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.1);
+            transform: scale(1);
+            background: white;
+            border: 3px solid transparent;
+        }
+
+        .btn-yes {
+            background: #ff4d7a;
+            color: white;
+            box-shadow: 0 12px 0 #b32e4f, 0 12px 20px #ff8da1;
+        }
+
+        .btn-no {
+            background: #f5f5f5;
+            color: #444;
+            border: 3px solid #ffb6c1;
+            box-shadow: 0 8px 0 #d4a5af;
+            position: relative;
+            transition: 0.1s;
+        }
+
+        /* runaway no button special style */
+        .btn-no:hover {
+            background: #ffe2e7;
+        }
+
+        /* hidden message area */
+        .hidden-message {
+            margin-top: 2.5rem;
+            padding: 1.5rem;
+            background: #ffd9e4f0;
+            backdrop-filter: blur(4px);
+            border-radius: 50px 20px 50px 20px;
+            box-shadow: 0 10px 30px #ff9cb5;
+            color: #b32e55;
+            display: none;
+            font-size: 1.8rem;
+            font-weight: 600;
+            border: 3px solid white;
+        }
+
+        .hidden-message.show {
+            display: block;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .hotel-name {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #a1224b;
+            background: #ffffffaa;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            display: inline-block;
+            margin: 0.8rem 0 0.4rem;
+        }
+
+        .heart-decoration {
+            font-size: 3rem;
+            line-height: 1.2;
+            filter: drop-shadow(0 4px 6px #ff7496);
+        }
+
+        @keyframes popIn {
+            0% { opacity:0; transform: scale(0.7); }
+            100% { opacity:1; transform: scale(1); }
+        }
+
+        /* footer note */
+        .foot-note {
+            margin-top: 2rem;
+            font-size: 1.3rem;
+            color: #ce5b7b;
+        }
+
+        /* make buttons touch friendly */
+        @media (max-width: 550px) {
+            h1 { font-size: 2.4rem; }
+            .question { font-size: 1.6rem; }
+            .btn { font-size: 1.8rem; padding: 0.8rem 2rem; }
+            .button-pair { gap: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- multiple heart-shaped balloons floating around (using emoji) -->
+    <div class="floating-heart heart1">❤️🎈</div>
+    <div class="floating-heart heart2">❤️🎈</div>
+    <div class="floating-heart heart3">🎈❤️</div>
+    <div class="floating-heart heart4">❤️🎈</div>
+    <div class="floating-heart heart5">🎈❤️</div>
+    <div class="floating-heart heart6">❤️🎈</div>
+
+    <!-- main card -->
+    <div class="valentine-card">
+        <h1>💖 Valentine's Day 💖</h1>
+        <div class="question">
+            Will you be my Valentine? ❤️
+        </div>
+
+        <!-- buttons + runaway no -->
+        <div class="button-pair" id="buttonPair">
+            <button class="btn btn-yes" id="yesBtn">YES</button>
+            <button class="btn btn-no" id="noBtn">NO</button>
+        </div>
+
+        <!-- secret message (initially hidden) -->
+        <div id="secretMessage" class="hidden-message">
+            <div class="heart-decoration">❤️ 😊 ❤️</div>
+            I knew you'd say YES!<br>
+            <span class="hotel-name">💎 The Grand Heart Hotel 💎</span><br>
+            <span style="font-size: 1.9rem;">🕢 7:30 PM · Table for two 🕢</span>
+            <div style="margin-top: 0.8rem; font-size: 2rem;">❤️ see you there ❤️</div>
+        </div>
+
+        <div class="foot-note">
+            ✨ hearts floating just for you ✨
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+            const secretMsg = document.getElementById('secretMessage');
+            const buttonPair = document.getElementById('buttonPair');
+
+            // runaway effect for NO button
+            if (noBtn) {
+                noBtn.addEventListener('mouseover', function(e) {
+                    // get viewport / container boundaries to keep button inside card roughly
+                    const cardRect = buttonPair.getBoundingClientRect();
+                    const btnRect = noBtn.getBoundingClientRect();
+
+                    // maximum offset relative to current position, but we will move relative to parent container
+                    // we want to move it within buttonPair area, but not overlap YES too awkwardly
+                    const maxShift = 130; // pixels
+
+                    // generate random offsets, but try to keep button inside card's width
+                    let deltaX = (Math.random() - 0.5) * 2 * maxShift;  // between -maxShift and +maxShift
+                    let deltaY = (Math.random() - 0.5) * 2 * maxShift;
+
+                    // get current computed position (if any) or we use inline style
+                    // but we don't want to push it outside visible area
+                    const newLeft = (noBtn.offsetLeft + deltaX);
+                    const newTop = (noBtn.offsetTop + deltaY);
+
+                    // crude containment: keep within buttonPair's width/height
+                    const parentWidth = buttonPair.clientWidth;
+                    const parentHeight = buttonPair.clientHeight;
+                    const btnWidth = noBtn.offsetWidth;
+                    const btnHeight = noBtn.offsetHeight;
+
+                    // boundaries: left >= 0, top >= 0, right <= parentWidth, bottom <= parentHeight
+                    let limitedLeft = Math.min(Math.max(newLeft, 0), parentWidth - btnWidth);
+                    let limitedTop = Math.min(Math.max(newTop, 0), parentHeight - btnHeight);
+
+                    // apply the new position (relative to container)
+                    noBtn.style.position = 'relative';  // ensure positioning
+                    noBtn.style.left = limitedLeft + 'px';
+                    noBtn.style.top = limitedTop + 'px';
+
+                    // add a little transition for smoother movement (optional)
+                    noBtn.style.transition = 'left 0.15s ease, top 0.15s ease';
+                });
+
+                // also trigger on touch for mobile devices (basic)
+                noBtn.addEventListener('touchstart', function(e) {
+                    e.preventDefault(); // avoid double click
+                    // similar shift
+                    const cardRect = buttonPair.getBoundingClientRect();
+                    const btnRect = noBtn.getBoundingClientRect();
+                    const maxShift = 130;
+                    let deltaX = (Math.random() - 0.5) * 2 * maxShift;
+                    let deltaY = (Math.random() - 0.5) * 2 * maxShift;
+                    const newLeft = (noBtn.offsetLeft + deltaX);
+                    const newTop = (noBtn.offsetTop + deltaY);
+                    const parentWidth = buttonPair.clientWidth;
+                    const parentHeight = buttonPair.clientHeight;
+                    const btnWidth = noBtn.offsetWidth;
+                    const btnHeight = noBtn.offsetHeight;
+                    let limitedLeft = Math.min(Math.max(newLeft, 0), parentWidth - btnWidth);
+                    let limitedTop = Math.min(Math.max(newTop, 0), parentHeight - btnHeight);
+                    noBtn.style.position = 'relative';
+                    noBtn.style.left = limitedLeft + 'px';
+                    noBtn.style.top = limitedTop + 'px';
+                    noBtn.style.transition = 'left 0.2s ease, top 0.2s ease';
+                }, {passive: false});
+            }
+
+            // YES button click : reveal message, hide buttons?
+            yesBtn.addEventListener('click', function() {
+                // show message
+                secretMsg.classList.add('show');
+
+                // optional: hide the NO button (or keep it, but we can keep it because it's funny)
+                // but we also might move YES away? better keep both but if you want, we can disable no further
+                // i prefer to leave no button but disable runaway effect after yes? but fine
+                // add a little confetti effect (simulate with heart balloon)
+                // also move yes button slightly?
+                yesBtn.style.transform = 'scale(1.1)';
+                setTimeout(() => yesBtn.style.transform = 'scale(1)', 200);
+
+                // also can optionally disable further runaway on NO (but it's okay, user already won)
+                // maybe freeze no button after yes?
+                noBtn.style.pointerEvents = 'none';
+                noBtn.style.opacity = '0.6';
+                noBtn.style.transition = '0.3s';
+                // optional text change on no
+                noBtn.innerText = '❤️';
+            });
+
+            // if someone manages to click no (maybe by fast clicking without hover), we still show yes? but requirement is only yes triggers message.
+            noBtn.addEventListener('click', function(e) {
+                // if they actually catch the no, we could move it away harder or just do nothing but ensure message doesn't appear.
+                // but we also want "when they try to click on that button will move away". Already does on hover/move.
+                // For accidental click, we can simply also move it further
+                e.stopPropagation();
+                const parentWidth = buttonPair.clientWidth;
+                const parentHeight = buttonPair.clientHeight;
+                const btnWidth = noBtn.offsetWidth;
+                const btnHeight = noBtn.offsetHeight;
+                // teleport to random corner-ish
+                const randomLeft = Math.random() * (parentWidth - btnWidth);
+                const randomTop = Math.random() * (parentHeight - btnHeight);
+                noBtn.style.position = 'relative';
+                noBtn.style.left = randomLeft + 'px';
+                noBtn.style.top = randomTop + 'px';
+                noBtn.style.transition = 'left 0.2s, top 0.2s';
+            });
+
+            // extra spark: if NO button gets clicked many times, still fine. We'll keep message only on YES.
+        })();
+    </script>
+
+    <!-- ensure buttons initial positions are static, but javascript may apply relative positioning -->
+    <style>
+        /* reset button position initially */
+        #noBtn {
+            position: relative;
+            left: auto;
+            top: auto;
+            transition: left 0.2s ease, top 0.2s ease, background 0.2s;
+        }
+        /* for yes we keep static */
+        #yesBtn {
+            position: relative;
+        }
+        .button-pair {
+            position: relative;
+        }
+    </style>
+</body>
+</html>
